@@ -1,0 +1,46 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-4.3.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	<bean class="com.tinkerpop.blueprints.impls.orient.OrientGraph">
+		<constructor-arg type="java.lang.String"
+			value="${orientDB.protocol}:${orientDB.host}:${orientDB.port}/${orientDB.name}" />
+	</bean>
+
+	<bean class="com.tinkerpop.frames.FramedGraphFactory">
+		<constructor-arg>
+			<list>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean class="com.tinkerpop.frames.FramedGraph" factory-bean="com.tinkerpop.frames.FramedGraphFactory"
+		factory-method="create">
+		<constructor-arg ref="com.tinkerpop.blueprints.impls.orient.OrientGraph"/>
+	</bean>
+
+	<!--<bean id="orientDbConnectionPool" class="com.orientechnologies.orient.core.db.OPartitionedDatabasePool">-->
+		<!--<constructor-arg type="java.lang.String" value="${orientDB.protocol}:${orientDB.host}:${orientDB.port}/${orientDB.name}"/>-->
+		<!--<constructor-arg type="java.lang.String" value="${orientDB.user}"/>-->
+		<!--<constructor-arg type="java.lang.String" value="${orientDB.pass}"/>-->
+		<!--<constructor-arg type="int" value="64"/>-->
+		<!--<constructor-arg type="int" value="100"/>-->
+	<!--</bean>-->
+
+	<bean id="orientGraphFactory" class="com.tinkerpop.blueprints.impls.orient.OrientGraphFactory" >
+		<constructor-arg type="java.lang.String" value="${orientDB.protocol}:${orientDB.host}:${orientDB.port}/${orientDB.name}"/>
+		<constructor-arg type="java.lang.String" value="${orientDB.user}"/>
+		<constructor-arg type="java.lang.String" value="${orientDB.pass}"/>
+		<constructor-arg type="boolean" value="true"/>
+		<!--<constructor-arg ref="orientDbConnectionPool"/>-->
+	</bean>
+
+	<!--<bean id="orientGraphR" class="com.tinkerpop.blueprints.impls.orient.OrientGraph"-->
+		  <!--scope="request" factory-bean="orientGraphFactory" factory-method="getTx" destroy-method="shutdown"/>-->
+
+</beans>

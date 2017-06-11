@@ -1,0 +1,104 @@
+<template>
+  <require from="./../converters/dateConverter"></require>
+  <require from="./../converters/moneyConverter"></require>
+
+  <compose router.bind="router" view-model="shell/nav-bar"></compose>
+
+  <div class="container">
+
+    <div class="row">
+
+      <compose view-model="shell/page-title"  model.bind="{ titleInfo: 'Companii' }" style="text-align: center"></compose>
+
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="search">
+          <div class="col-md-offset-3 col-md-5 col-sm-offset-2 col-sm-8 col-xs-8 form-group top_search">
+            <div class="input-group">
+              <form submit.delegate="search()">
+                <input value.bind="name" type="text" class="form-control" placeholder="Denumire sau IDNO">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="submit">Caută!</button>
+                        </span>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1  col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2> <span class="${iconClass}"></span>
+              ${tableTitle}
+              <small>
+                ${description}
+              </small>
+            </h2>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <div class="table-responsive">
+
+              <table ref="resultsTable"  id.bind="title" class="display table row-border hover marked stripe dataTables_wrapper form-inline dt-bootstrap no-footer responsive no-wrap " cellspacing="0" width="100%">
+                <thead show.bind="head">
+
+                <tr>
+
+                  <th repeat.for="header of headers">
+                    ${header}
+                  </th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <div if.bind="!companies" class="loader">
+                  <img src="/img/loading.gif" alt="Loading..."/>
+                </div>
+                <tr repeat.for="row of companies">
+                  <td>
+                    <a href="company/${row.newId}">
+                      ${row.identity}
+                    </a>
+                  </td>
+                  <td>
+                    <a href="company/${row.newId}">
+                    ${row.name}
+                    </a>
+                  </td>
+                  <td>
+                    ${row.registrationDate | dateFormat}
+                  </td>
+                  <td>
+                    <strong>${row.agregatedInfo.totalSum | moneyFormat}</strong>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <ul class="pagination pagination-sm m-t-none m-b-none">
+                <li repeat.for="item of pagination" if.bind="!item.hide" class.bind="item.isActive ? 'active' : ''" >
+                  <a click.delegate="loadPage(item.value)">
+                    <i if.bind="item.prev" class="fa fa-chevron-left"></i>
+                    <i if.bind="item.next" class="fa fa-chevron-right"></i>
+                    ${item.label}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <compose view-model="shell/footer"></compose>
+  </footer>
+</template>
